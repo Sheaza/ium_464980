@@ -27,7 +27,7 @@ jobs:
       - name: Upload Model Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: model.keras
+          name: model
           path: model.keras
 
   evaluation:
@@ -45,8 +45,7 @@ jobs:
       - name: Download Model Artifact
         uses: actions/download-artifact@v2
         with:
-          name: model.keras
-          path: model.keras
+          name: model
 
       - name: Evaluate Model
         run: |
