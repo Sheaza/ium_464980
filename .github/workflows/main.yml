@@ -1,0 +1,61 @@
+name: ML Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      epochs:
+        description: 'Number of epochs'
+        required: true
+        default: '30'
+
+jobs:
+  training:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Train Model
+        run: |
+          python3 train.py --epochs ${{ github.event.inputs.epochs }}
+
+      - name: Upload Model Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: model
+          path: model.keras
+
+  evaluation:
+    needs: training
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Download Model Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: model
+          path: model.keras
+
+      - name: Evaluate Model
+        run: |
+          python3 predict.py
+
+      - name: Upload Evaluation Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: evaluation
+          path: |
+            predictions.txt
+            rmse.txt
