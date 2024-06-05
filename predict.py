@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 np.set_printoptions(threshold=np.inf)
 
-data = pd.read_csv("MLFLOW/df_test.csv")
+data = pd.read_csv("df_test.csv")
 X_test = data.drop("Performance Index", axis=1)
 y_test = data["Performance Index"]
 
